@@ -39,7 +39,7 @@ class Timer {
   public:
     Timer();
     void executeNextTick(Listener* listener); // it runs the listener once immidiately and then forgets about it 
-    void executePeriodically(Listener listener, unsigned int period=1000, unsigned int numberOfReps=1); // scans the list periodically by sending the new entry into an immediateExecutionList. The first execution will happen in number of millis 
+    void executePeriodically(Listener* listener, unsigned int period=1000, unsigned int numberOfReps=1); // scans the list periodically by sending the new entry into an immediateExecutionList. The first execution will happen in number of millis 
     void tick(unsigned long int tickNumber); // being called from the Arduino loop, each tick nowMillis gets updated 
     ~Timer();
 };    

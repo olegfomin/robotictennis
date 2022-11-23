@@ -7,9 +7,9 @@
 class Listener {
   public:
     // Being called when the timer generates the event
-    void onTimer(unsigned long int tickNumber);
+    virtual void onTimer(unsigned long int tickNumber);
     // Being called when the state changes and event gets generated supplying listener with old and new values
-    void onStateChange(int oldValue, int newValue);
+    virtual void onStateChange(int oldValue, int newValue);
  };
 
 #endif
@@ -30,4 +30,4 @@ class Listener {
     void onEnterButton();
     void onDownButton();
     void onLowButton(unsigned int voltage);
-    void onShutDown(unsigned int voltage); *\
+    void onShutDown(unsigned int voltage); */
