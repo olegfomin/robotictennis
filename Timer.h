@@ -2,8 +2,8 @@
 #define TIMER
 
 #include <limits.h>
-#include "src/listener/Listener.h"
-#include "ArrayList.h"
+#include "Listener.h"
+
 
 /***************************************************************************************************************************************************************************************/
 /* Describes the timer parameters such as period and number of repetitions. It also contains the next execution time in milliseconds                                                   */
@@ -24,6 +24,41 @@ class DelayedExecution {
     ~DelayedExecution();   
 };
 
+/*********************************************************************************/
+/* Contains delayed execution time and the refernce to the next node in the list */
+/*********************************************************************************/
+class ListNode {
+  private:
+    DelayedExecution* delayedExecution=NULL;
+    ListNode* nextListNode=NULL;
+  public:
+    ListNode();
+    ListNode(DelayedExecution* delayedExecution);
+    ListNode(DelayedExecution* delayedExecution, ListNode nextNode);
+    DelayedExecution* getDelayedExecution();
+    ListNode* getNextListNode();
+    // Pushes the new element in between sequential execution times say there is a list 1->3->4->9->9->14 if we want to add the new delayed execution with 10 then the list would look like 1->3->4->9->9->10->14
+    // It returns either the new node or the root provided depending upon whether the 'delayed execution' should be before the root or after
+    ListNode* addBetween(DelayedExecution* delayedExecution); 
+    ~ListNode();
+};
+
+/*********************************************************************************/
+/* Contains the reference to the root of lineked list                            */
+/*********************************************************************************/
+class Chain {
+  private:
+    ListNode* root = NULL;
+  public:  
+    Chain();
+    Chain(ListNode* root);
+    void push(DelayedExecution* delayedExecution);
+    bool hasNext();
+    DelayedExecution* pop(unsigned int nextExecutionTime);
+    DelayedExecution* peekDelayedExecution(); // Allowing the peekhole so that we can sleep till the time the execution is due
+    ~Chain();
+};
+
 /***************************************************************************************************************************************************************************************/
 /* The timer that gets invoked from arduno loop and it goes through the immediateExecutionList first. The class calls the listener and then removes it from the list. It verifies      */
 /* whether there are any entries in the delayedExecutionList that are due for execution at which moment this entry gets moved into immediateExecutionList array where it is being      */
@@ -32,9 +67,6 @@ class DelayedExecution {
 class Timer {
   private:
     unsigned int nowMillis = 0;
-    // Array list that contains all the listeners that needed to be executed immediatelly and once only
-    ArrayList<Listener*> *immediateExecutionList = new ArrayList<Listener*>();
-    // Array list that contains all the timers that need to be executed in the future
     ArrayList<DelayedExecution*> *delayedExecutionList = new ArrayList<DelayedExecution*>();
   public:
     Timer();

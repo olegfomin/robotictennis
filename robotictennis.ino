@@ -1,3 +1,9 @@
+#include "Timer.h"
+#include "Listener.h"
+
+unsigned long int counter = 0;
+Timer* timer = new Timer();
+
 void setup() {
   //  LED to PIN Map:
 /*************/
@@ -57,10 +63,15 @@ void setup() {
   pinMode(6, OUTPUT); // The Motor power Relay (R3)
   pinMode(5, OUTPUT); // The Reserved R2 Relay (Speakers?)
 
+  Serial.begin(9600);
+
+    timer->executePeriodically(new TumblerListener(52), 1000, 200);
+//  timer->executeNextTick(new TumblerListener(52));
+
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
-
+  timer->tick(counter);
+  counter++;
 }
